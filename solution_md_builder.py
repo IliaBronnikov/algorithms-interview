@@ -1,6 +1,5 @@
 import sys
 import argparse
-import os
 
 def createParser():
     parser = argparse.ArgumentParser()
@@ -9,12 +8,8 @@ def createParser():
     parser.add_argument('name_task',nargs='+')
     return parser
 
-
-
-
 def build_code_block(solution):
     return ''.join([line for line in solution])
-
 
 if __name__ == '__main__':
     parser = createParser()
