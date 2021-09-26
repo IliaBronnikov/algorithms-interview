@@ -11,42 +11,45 @@ def createParser():
 def build_code_block(solution):
     return ''.join([line for line in solution])
 
-def read_data(task_block):
-    with open(task_block.lower() +'.md', mode = 'r') as s:
-        s.readline()
-        s.readline()
-        full = s.readlines()
-
-    with open('text_solution.txt') as f:
-        TASK_SOLUTION = f.readlines()
-
+def read_data(text_file):
+    with open(text_file) as s:
+        list_name = s.readlines()
     s.close()
-    f.close()
+    return list_name
 
-    return full, TASK_SOLUTION
+def build_constr_get_leetcode_sol(name_task, text_solution):
+    NT = ' '.join(name_task)
+    NT_L = '-'.join(name_task).lower()
+    return {'+ [{}](#{})\n'.format(NT, NT_L):'\n\n## ' + NT + '\n\nhttps://leetcode.com/problems/' + NT_L +
+                                            '\n\n```python\n' + text_solution + '\n```'}
 
-def update_md_file(list_full_text, TASK_SOLUTION):
-        TASK_LINK = 'https://leetcode.com/problems/' + '-'.join(namespace.name_task).lower() + '/'
-        TASK_TITLE = ' '.join(namespace.name_task)
-        link_suffix = TASK_LINK.split("/")[-2]
-        list_full_text.insert(list_full_text.index('\n'), '+ [{}](#{})\n'.format(TASK_TITLE, link_suffix))
-        list_full_text.append('\n\n## {}\n\n{}\n\n```python\n{}\n```\n'\
-        .format(TASK_TITLE, TASK_LINK, build_code_block(TASK_SOLUTION)))
+def get_splitted_md(old_md_file):
+    return {old_md_file.split('<!--  -->')[0]:old_md_file.split('<!--  -->')[1]}
 
-def record_new_md_file(task_block, list_full_text):
-    with open(task_block.lower() +'.md', mode = 'w') as p:
-        p.write('#' + task_block.title() +'\n\n')
-        for line in list_full_text:
+def get_full_md(old_md_file, new_md_file):
+    return list(old_md_file.keys())[0] + list(new_md_file.keys())[0] + '<!--  -->' + list(old_md_file.values())[0] + \
+           list(new_md_file.values())[0]
+
+def record_data(name_file, full_text):
+    with open(name_file, mode = 'w') as p:
+        for line in full_text:
             p.write(line)
     p.close()
-
 
 if __name__ == '__main__':
     parser = createParser()
     namespace = parser.parse_args(sys.argv[1:])
-    full_text, TASK_SOLUTION = read_data(namespace.name_task_block)
-    update_md_file(full_text, TASK_SOLUTION)
-    record_new_md_file(namespace.name_task_block, full_text)
+
+    old_md = read_data(namespace.name_task_block.lower() + '.md')
+    old_md = build_code_block(old_md)
+    TASK_SOLUTION_LIST = read_data('text_solution.txt')
+    TASK_SOLUTION_STR = build_code_block(TASK_SOLUTION_LIST)
+
+    prep_sol = build_constr_get_leetcode_sol(namespace.name_task, TASK_SOLUTION_STR)
+    old_md_split = get_splitted_md(old_md)
+    new_md = get_full_md(old_md_split, prep_sol)
+
+    record_data(namespace.name_task_block.lower() +'.md', new_md)
 
 
 
