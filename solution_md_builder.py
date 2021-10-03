@@ -1,7 +1,7 @@
 import sys
 import argparse
-import ast
-comment = '<!--  -->'
+DIVIDED_CONSTANT = '<!--  -->'
+
 
 def createParser():
     parser = argparse.ArgumentParser()
@@ -10,6 +10,7 @@ def createParser():
     parser.add_argument('name_task',nargs='+')
     return parser
 
+
 def read_data(text_file):
     data = ''
     with open(text_file) as s:
@@ -17,21 +18,26 @@ def read_data(text_file):
     s.close()
     return data
 
+
 def build_constr_get_leetcode_sol(name_task, text_solution):
-    NameTask = ' '.join(name_task)
-    NameTask_L = '-'.join(name_task).lower()
+    name_task_str = ' '.join(name_task)
+    name_task_low_str = '-'.join(name_task).lower()
     link = 'https://leetcode.com/problems/'
-    key_text = '+ [{}](#{})\n'.format(NameTask, NameTask_L)
-    value_text = '\n\n## {}\n\n{}{}\n\n```python\n{}\n```'.format(NameTask, link, NameTask_L, text_solution)
-    return {key_text:value_text}
+    key_text = '+ [{}](#{})\n'.format(name_task_str, name_task_low_str)
+    value_text = '\n\n## {}\n\n{}{}\n\n```python\n{}\n```'.format(name_task_str, link, name_task_low_str, text_solution)
+    return {'new_md_link':key_text, 'new_code_block':value_text}
 
 
 def get_splitted_md(old_md_file):
-    return {old_md_file.split(comment)[0]:old_md_file.split(comment)[1]}
+    return {'old_md_link': old_md_file.split(DIVIDED_CONSTANT)[0],'old_code_block' :old_md_file.split(
+                                                                  DIVIDED_CONSTANT)[1]}
+
 
 def get_full_md(old_md_file, new_md_file):
-    return list(old_md_file.keys())[0] + list(new_md_file.keys())[0] + comment + list(old_md_file.values())[0] + \
-           list(new_md_file.values())[0]
+    return '{}{}{}{}{}'.format(old_md_file['old_md_link'], new_md_file['new_md_link'], DIVIDED_CONSTANT, old_md_file[
+        'old_code_block'], new_md_file['new_code_block'])
+
+
 
 def write_data(name_file, full_text):
     with open(name_file, mode = 'w') as p:

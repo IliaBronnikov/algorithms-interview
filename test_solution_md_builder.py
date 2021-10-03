@@ -4,10 +4,11 @@ import unittest
 class TestBuilder(unittest.TestCase):
     def test_build_constr_get_leetcode_sol_1(self):
         self.assertCountEqual(build_constr_get_leetcode_sol(['Valid', 'Palindrome'], 'I am the best'),
-                               {'+ [{}](#{})\n'.format('Valid Palindrome', 'valid-palindrome'):'\n\n## ' + 'Valid Palindrome' +
-                                                                  '\n\nhttps://leetcode.com/problems/'  +
-                                                                                'valid-palindrome' +
-                                            '\n\n```python\n' + 'I am the best' + '\n```'})
+                               {'+ [Valid Palindrome](#valid-palindrome)\n': '\n\n## Valid '
+                                                                             'Palindrome\n'
+                                                                             '\nhttps://leetcode.com/problems/'
+                                                                             'valid-palindrome\n\n```python\nI am '
+                                                                             'the best\n```'})
 
     def test_get_splitted_md_1(self):
         self.assertCountEqual(get_splitted_md('+ [Va Pal](#va-pal)\n<!--  -->\n## Va Pal'),{'+ [Va Pal]('
