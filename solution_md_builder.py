@@ -6,9 +6,8 @@ MD_FILE_DELIMITER = '<!--  -->'
 
 def createParser():
     parser = argparse.ArgumentParser()
+    parser.add_argument('code')
     parser.add_argument('name_task_block')
-    parser.add_argument('code', type=open)
-    parser.add_argument('name_task',nargs='+')
     return parser
 
 
@@ -16,27 +15,24 @@ def read_data(text_file):
     data = ''
     with open(text_file) as s:
         data = s.read()
-    s.close()
     return data
 
 
-def get_link_from_text(text_data):
-    return re.search(r'https://.*problems/', text_data).group(0)
-
-
-def build_constr_get_leetcode_sol(name_task, text_solution, link):
-    name_task_str = ' '.join(name_task)
-    name_task_low_str = '-'.join(name_task).lower()
-    key_text = '+ [{}](#{})\n'.format(name_task_str, name_task_low_str)
-    value_text = '\n\n## {}\n\n{}{}/\n\n```python\n{}\n```'.format(name_task_str, link, name_task_low_str,
-                                                                   text_solution)
+def build_constr_get_leetcode_sol(text_solution):
+    name_task = re.match(r'.*\b', text_solution).group(0)
+    name_link = re.search(r'https://.*/', text_solution).group(0)
+    key_text = '+ [{}](#{})\n'.format(name_task, '-'.join(name_task.lower().split()))
+    value_text = '\n\n## {}\n\n{}{}/\n\n```python\n{}\n```'.format(name_task, name_link,  '-'.join(name_task.lower(
+    ).split()), '\n'.join([line[4:] for line in text_solution.split('\n')[3:]]))
     return {'md_link':key_text, 'code_block':value_text}
 
 
-def get_splitted_md(old_md_file):
-    return {'md_link': old_md_file.split(MD_FILE_DELIMITER)[0],'code_block' :old_md_file.split(
-                                                                  MD_FILE_DELIMITER)[1]}
-
+def get_splitted_md(old_md_file, name_task_block):
+    if old_md_file:
+        splitted_md_file = old_md_file.split(MD_FILE_DELIMITER)
+        return {'md_link': splitted_md_file[0],'code_block' :splitted_md_file[1]}
+    else:
+        return {'md_link': '# {}\n\n'.format(name_task_block.split('.')[0].capitalize()),'code_block' :''}
 
 def get_full_md(old_md_file, new_md_file):
     return '{}{}{}{}{}'.format(old_md_file['md_link'], new_md_file['md_link'], MD_FILE_DELIMITER, old_md_file[
@@ -48,19 +44,28 @@ def write_data(name_file, full_text):
         p.write(full_text)
     p.close()
 
-if __name__ == '__main__':
+
+def contain_new_md_file(task_solution, old_md, name_task_block):
+    prepared_solution = build_constr_get_leetcode_sol(task_solution)
+    old_md_split = get_splitted_md(old_md, name_task_block)
+    return get_full_md(old_md_split, prepared_solution)
+
+
+def main():
     parser = createParser()
-    namespace = parser.parse_args(sys.argv[1:])
+    arg = parser.parse_args(sys.argv[1:])
+    name_task_block = arg.name_task_block
+    code = arg.code
 
-    old_md = read_data(namespace.name_task_block.lower() + '.md')
-    task_solution = read_data('text_solution.txt')
-    link = get_link_from_text(old_md)
+    old_md = read_data(name_task_block)
+    task_solution = read_data(code)
 
-    prepared_solution = build_constr_get_leetcode_sol(namespace.name_task, task_solution, link)
-    old_md_split = get_splitted_md(old_md)
-    new_md = get_full_md(old_md_split, prepared_solution)
+    write_data(name_task_block, contain_new_md_file(task_solution, old_md, name_task_block))
 
-    write_data(namespace.name_task_block.lower() +'.md', new_md)
+
+if __name__ == '__main__':
+    main()
+
 
 
 
