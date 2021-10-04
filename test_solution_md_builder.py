@@ -22,13 +22,13 @@ class TestBuilder(unittest.TestCase):
         '13<!--  -->24')
 
 
-    def test_contain_new_md_file_notempty_md(self):
+    def test_content_new_md_file_notempty_md(self):
         self.assertCountEqual(smb.contain_new_md_file('Test name\nhttps://leetcode.com/\nclass\n    '
         '1stline\n    2ndline', '1<!--  -->2', 'string.md'), '1+ [Test name](#test-name)\n<!--  -->2\n\n## '
         'Test name\n\nhttps://leetcode.com/test-name/\n\n```python\n1stline\n2ndline\n```')
 
 
-    def test_contain_new_md_file_empty_md(self):
+    def test_content_new_md_file_empty_md(self):
         self.assertCountEqual(smb.contain_new_md_file('Test name\nhttps://leetcode.com/\nclass\n    '
         '1stline\n    2ndline', '', 'string.md'), '# String\n\n+ [Test name](#test-name)\n<!--  -->\n\n## Test '
                                                   'name\n\nhttps://'

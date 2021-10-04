@@ -45,7 +45,7 @@ def write_data(name_file, full_text):
     p.close()
 
 
-def contain_new_md_file(task_solution, old_md, name_task_block):
+def content_new_md_file(task_solution, old_md, name_task_block):
     prepared_solution = build_constr_get_leetcode_sol(task_solution)
     old_md_split = get_splitted_md(old_md, name_task_block)
     return get_full_md(old_md_split, prepared_solution)
