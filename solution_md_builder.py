@@ -23,9 +23,10 @@ def read_data(text_file):
 def build_constr_get_leetcode_sol(text_solution):
     name_task = re.match(r'.*\b', text_solution).group(0)
     name_link = re.search(r'https://.*/', text_solution).group(0)
-    key_text = KEY_TEXT_TEMPLATE.format(name_task, '-'.join(name_task.lower().split()))
-    value_text = VALUE_TEXT_TEMPLATE.format(name_task, name_link,  '-'.join(name_task.lower(
-    ).split()), '\n'.join([line[4:] for line in text_solution.split('\n')[3:]]))
+    text_sol_func = '\n'.join([line[4:] for line in text_solution.split('\n')[3:]])
+    linked_to_task = '-'.join(name_task.lower().split())
+    key_text = KEY_TEXT_TEMPLATE.format(name_task, linked_to_task)
+    value_text = VALUE_TEXT_TEMPLATE.format(name_task, name_link,  linked_to_task, text_sol_func)
     return {'md_link':key_text, 'code_block':value_text}
 
 
