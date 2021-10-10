@@ -39,8 +39,8 @@ def get_splitted_md(old_md_file, name_task_block):
 
 
 def get_full_md(old_md_file, new_md_file):
-    return '{}{}{}{}{}'.format(old_md_file['md_link'], new_md_file['md_link'], MD_FILE_DELIMITER, old_md_file[
-        'code_block'], new_md_file['code_block'])
+    return '{}{}{}{}{}'.format(old_md_file['md_link'], new_md_file['md_link'], MD_FILE_DELIMITER,
+                               old_md_file['code_block'], new_md_file['code_block'])
 
 
 def write_data(name_file, full_text):
