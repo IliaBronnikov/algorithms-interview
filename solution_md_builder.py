@@ -27,15 +27,16 @@ def build_constr_get_leetcode_sol(text_solution):
     linked_to_task = '-'.join(name_task.lower().split())
     key_text = KEY_TEXT_TEMPLATE.format(name_task, linked_to_task)
     value_text = VALUE_TEXT_TEMPLATE.format(name_task, name_link,  linked_to_task, text_sol_func)
-    return {'md_link':key_text, 'code_block':value_text}
+    return {'md_link': key_text, 'code_block': value_text}
 
 
 def get_splitted_md(old_md_file, name_task_block):
     if old_md_file:
         splitted_md_file = old_md_file.split(MD_FILE_DELIMITER)
-        return {'md_link': splitted_md_file[0],'code_block' :splitted_md_file[1]}
+        return {'md_link': splitted_md_file[0], 'code_block': splitted_md_file[1]}
     else:
-        return {'md_link': '# {}\n\n'.format(name_task_block.split('.')[0].capitalize()),'code_block' :''}
+        return {'md_link': '# {}\n\n'.format(name_task_block.split('.')[0].capitalize()), 'code_block': ''}
+
 
 def get_full_md(old_md_file, new_md_file):
     return '{}{}{}{}{}'.format(old_md_file['md_link'], new_md_file['md_link'], MD_FILE_DELIMITER, old_md_file[
@@ -43,7 +44,7 @@ def get_full_md(old_md_file, new_md_file):
 
 
 def write_data(name_file, full_text):
-    with open(name_file, mode = 'w') as p:
+    with open(name_file, mode='w') as p:
         p.write(full_text)
 
 
@@ -67,9 +68,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
