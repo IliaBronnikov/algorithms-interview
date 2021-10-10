@@ -1,24 +1,70 @@
-TASK_LINK = 'https://leetcode.com/problems/valid-palindrome/'
-TASK_TITLE = 'Valid Palindrome'
-TASK_SOLUTION = '''    def isPalindrome(self, s: str) -> bool:
-        r = re.sub('[^a-zA-Z0-9]', '', s)
-        if len(r) == 1:
-            return True
-        r = r.lower()
-        for i in range(len(r)//2):
-            if r[i] != r[-i-1]:
-                return False
-        return True    '''
-SOLUTION_MD_TEMPLATE = '+ [{}](#{})\n\n## {}\n\n{}\n\n```python\n{}\n```\n'
+import sys
+import argparse
+import re
+MD_FILE_DELIMITER = '<!--  -->'
+KEY_TEXT_TEMPLATE = '+ [{}](#{})\n'
+VALUE_TEXT_TEMPLATE = '\n\n## {}\n\n{}{}/\n\n```python\n{}\n```'
 
 
-def build_code_block(solution):
-    return '\n'.join([line[4:] for line in solution.split('\n')])
+def createParser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('code')
+    parser.add_argument('name_task_block')
+    return parser
+
+
+def read_data(text_file):
+    data = ''
+    with open(text_file) as s:
+        data = s.read()
+    return data
+
+
+def build_constr_get_leetcode_sol(text_solution):
+    name_task = re.match(r'.*\b', text_solution).group(0)
+    name_link = re.search(r'https://.*/', text_solution).group(0)
+    text_sol_func = '\n'.join([line[4:] for line in text_solution.split('\n')[3:]])
+    linked_to_task = '-'.join(name_task.lower().split())
+    key_text = KEY_TEXT_TEMPLATE.format(name_task, linked_to_task)
+    value_text = VALUE_TEXT_TEMPLATE.format(name_task, name_link,  linked_to_task, text_sol_func)
+    return {'md_link': key_text, 'code_block': value_text}
+
+
+def get_splitted_md(old_md_file, name_task_block):
+    if old_md_file:
+        splitted_md_file = old_md_file.split(MD_FILE_DELIMITER)
+        return {'md_link': splitted_md_file[0], 'code_block': splitted_md_file[1]}
+    else:
+        return {'md_link': '# {}\n\n'.format(name_task_block.split('.')[0].capitalize()), 'code_block': ''}
+
+
+def get_full_md(old_md_file, new_md_file):
+    return '{}{}{}{}{}'.format(old_md_file['md_link'], new_md_file['md_link'], MD_FILE_DELIMITER,
+                               old_md_file['code_block'], new_md_file['code_block'])
+
+
+def write_data(name_file, full_text):
+    with open(name_file, mode='w') as p:
+        p.write(full_text)
+
+
+def get_content_new_md_file(task_solution, old_md, name_task_block):
+    prepared_solution = build_constr_get_leetcode_sol(task_solution)
+    old_md_split = get_splitted_md(old_md, name_task_block)
+    return get_full_md(old_md_split, prepared_solution)
+
+
+def main():
+    parser = createParser()
+    arg = parser.parse_args(sys.argv[1:])
+    name_task_block = arg.name_task_block
+    code = arg.code
+
+    old_md = read_data(name_task_block)
+    task_solution = read_data(code)
+
+    write_data(name_task_block, get_content_new_md_file(task_solution, old_md, name_task_block))
 
 
 if __name__ == '__main__':
-    link_suffix = TASK_LINK.split("/")[-2]
-    result_md = SOLUTION_MD_TEMPLATE\
-        .format(TASK_TITLE, link_suffix, TASK_TITLE, TASK_LINK, build_code_block(TASK_SOLUTION))
-    print(result_md)
-
+    main()
