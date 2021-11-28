@@ -4,7 +4,6 @@
 + [Valid Parentheses](#valid-parentheses)
 <!--  -->
 ## Valid Palindrome
-## Valid Parentheses
 
 https://leetcode.com/problems/valid-palindrome/
 
@@ -19,6 +18,8 @@ def isPalindrome(self, s: str) -> bool:
             return False
     return True    
 ```
+
+## Valid Parentheses
 
 https://leetcode.com/problems/valid-parentheses/
 
