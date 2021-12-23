@@ -2,7 +2,7 @@
 
 + [Valid Palindrome](#valid-palindrome)
 + [Valid Parentheses](#valid-parentheses)
-+ [Shortest distans XY]
++ [Shortest distans XY](#shortest-distans-xy)
 <!--  -->
 ## Valid Palindrome
 
