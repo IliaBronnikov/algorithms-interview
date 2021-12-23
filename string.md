@@ -2,6 +2,7 @@
 
 + [Valid Palindrome](#valid-palindrome)
 + [Valid Parentheses](#valid-parentheses)
++ [Shortest distans XY]
 <!--  -->
 ## Valid Palindrome
 
@@ -47,4 +48,43 @@ def isValid(self, s: str) -> bool:
         return True
     else:
         return False 
+```
+
+## Shortest distans XY
+
+- Дана строка, состоящая из букв 'X', 'Y' и 'O'.
+- Необходимо найти кратчайшее расстояние между буквами 'X' и 'Y', либо вывести 0, если 'X' либо 'Y' отсутствуют.
+- Дистанция между двумя рядом стоящими буквами считается как 1 (одно межбуквенное расстояние)
+- Дистанция может считаться в обе стороны
+- X00XY -> 1
+- XY -> 1
+
+```python
+def xy_dist(string):
+    act_count = 0
+    count = 0
+    start = None
+    if len(string) > 1
+        for char in string:
+            if start == None:
+                if char == "X":
+                    start = "X"
+                    end = "Y"
+                elif char == "Y":
+                    start = "Y"
+                    end = "X" 
+                else:
+                    continue       
+            count += 1
+            if char == end:
+                start, end = end, start
+                if act_count > count or act_count == 0:
+                    act_count = count - 1
+                count = 0    
+                continue
+            elif char == start:
+                count = 0
+        return act_count
+    else:
+        return 0
 ```
